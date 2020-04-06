@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello</title>
+</head>
+<body>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+{%if anime_titles %}
+{%for anime in anime_titles%}
+<div>
+	<p>{{anime.title_name}}</p>
+	<img src="{{anime.poster}}">
+</div>
+{%endfor%}
+{%else%}
+<p>No anime yet</p>
+{%endif%}
+</body>
+</html>
