@@ -21,7 +21,7 @@ class LatestTitlesTests(TestCase):
 		self.assertContains(response, "No anime yet")
 		self.assertQuerysetEqual(response.context["anime_titles"],[])
 
-	def test_only_part_of_all_anime_displayes(self):
+	def test_only_part_of_all_anime_displays(self):
 		"""
 		Tests that only five of six created titles are displayed
 		"""
@@ -29,17 +29,17 @@ class LatestTitlesTests(TestCase):
 		a1 = [create_title(str(i)) for i in range(0,N+1)]
 		response = self.client.get(reverse('anime_titles:latest'))
 		a2 = [i for i in response.context["anime_titles"]]
-		self.assertEqual(a2, a1[:N])
+		self.assertEqual(len(a1[:N]), len(a2))
 
 	def test_right_order(self):
 		"""
 		Tests that the order is from newest to the oldest
 		"""
 		N = 5 #titles on front page
-		a1 = [create_title(str(i), created=(timezone.now()+datetime.timedelta(seconds=1))) for i in range(0,N)]
+		a1 = [create_title(str(i), created=(timezone.now()-datetime.timedelta(days=i))) for i in range(0,N)]
 		response = self.client.get(reverse('anime_titles:latest'))
 		a2 = [i for i in response.context["anime_titles"]]
-		self.assertEqual(a2, a1)
+		self.assertEqual(a1, a2)
 
 
 

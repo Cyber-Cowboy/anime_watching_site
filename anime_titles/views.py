@@ -1,9 +1,11 @@
 from django.shortcuts import render
+from django.views import generic
 
 from .models import Title 
-def index(request):
-	return latestAnime(request)
 
-def latestAnime(request):
-	latest_anime_titles = Title.objects.order_by("-created")[:5]
-	return render(request, 'anime_titles/latest_anime.html',{"anime_titles":latest_anime_titles})
+class LatestView(generic.ListView):
+	template_name = "anime_titles/latest_anime.html"
+	context_object_name = "anime_titles"
+
+	def get_queryset(self):
+		return Title.objects.order_by('-created')[:5]

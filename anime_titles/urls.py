@@ -4,6 +4,6 @@ from . import views
 
 app_name="anime_titles"
 urlpatterns = [
-	path('', views.index, name="index"),
-	path('latest/', views.index, name="latest"),
+	path('', views.LatestView.as_view(), name="index"),
+	path('latest/', views.LatestView.as_view(), name="latest"),
 ]
