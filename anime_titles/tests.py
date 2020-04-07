@@ -41,6 +41,11 @@ class LatestTitlesTests(TestCase):
 		a2 = [i for i in response.context["anime_titles"]]
 		self.assertEqual(a1, a2)
 
+class DetailTitleTests(TestCase):
+	def test_can_create_title_and_open_it_later(self):
+		name = "JoJo"
+		response = self.client.get(reverse('anime_titles:detail', args=(create_title(name).id,)))
+		self.assertContains(response, "<title>"+name+"</title>")
 
 
 class IndexTitlesPageTests(TestCase):

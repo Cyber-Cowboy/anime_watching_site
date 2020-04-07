@@ -7,10 +7,10 @@
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 {%if anime_titles %}
 {%for anime in anime_titles%}
-<div>
+<a href="{% url 'anime_titles:detail' anime.id %}"><div>
 	<p>{{anime.title_name}}</p>
 	<img src="{{anime.poster}}">
-</div>
+</div></a>
 {%endfor%}
 {%else%}
 <p>No anime yet</p>
