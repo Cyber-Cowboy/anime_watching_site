@@ -4,6 +4,15 @@
 	<title>{{title.title_name}}</title>
 </head>
 <body>
-{{title.title_name}}
+<h1>{{title.title_name}}</h1>
+<img src="{{title.poster}}">
+<br>
+{% for episode in title.episode_set.all %}
+<h2>{{episode.number}}</h2>
+		{% for translation in episode.translation_set.all %}
+				<h3>{{translation.author}}</h3>
+				<iframe width="640" height="384" src="{{translation.url}}" frameborder="0" scrolling="no" allowfullscreen></iframe>
+		{% endfor %}
+{% endfor %}
 </body>
 </html>
