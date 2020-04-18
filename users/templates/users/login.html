@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>register</title>
+</head>
+<body>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<form action="{% url 'users:login' %}" method="post">
+	{%csrf_token%}
+	<input type="text" name="nickname">
+	<input type="password" name="password">
+	<input type="submit">
+</form>
+</body>
+</html>

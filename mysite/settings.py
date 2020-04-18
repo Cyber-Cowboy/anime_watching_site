@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'users.apps.UsersConfig',
     'anime_titles.apps.AnimeTitlesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
