@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Hello</title>
-</head>
-<body>
+{% extends "anime_titles/base.html" %}
+{% block title %}Новинки{% endblock %}
+{% block content %}
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 {%if anime_titles %}
 {%for anime in anime_titles%}
@@ -15,5 +12,4 @@
 {%else%}
 <p>No anime yet</p>
 {%endif%}
-</body>
-</html>
+{%endblock%}

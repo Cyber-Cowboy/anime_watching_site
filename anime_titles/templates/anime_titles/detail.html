@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>{{title.title_name}}</title>
-</head>
-<body>
+{% extends "anime_titles/base.html" %}
+{% block title %}{{ title.title_name }}{% endblock %}
+{% block content %}
 <h1>{{title.title_name}}</h1>
 <img src="{{title.poster}}">
 <br>
@@ -14,5 +11,4 @@
 				<iframe width="640" height="384" src="{{translation.url}}" frameborder="0" scrolling="no" allowfullscreen></iframe>
 		{% endfor %}
 {% endfor %}
-</body>
-</html>
+{% endblock%}
