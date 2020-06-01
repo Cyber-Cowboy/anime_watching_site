@@ -2,6 +2,7 @@
 {% block title %}{{ title.title_name }}{% endblock %}
 {% block content %}
 <h1>{{title.title_name}}</h1>
+<h3>{%for tag in title.tags.all%}<a href="#">{{tag}}</a>, {%endfor%}</h3>
 <img src="{{title.poster}}">
 <br>
 {% for episode in title.episode_set.all %}

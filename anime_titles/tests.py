@@ -6,10 +6,12 @@ import datetime
 
 from .models import Title, Episode, Translation
 
-def create_title(title_name="JoJo", created=None, poster="image.com/image.jpg"):
+def create_title(title_name="JoJo", created=None, poster="image.com/image.jpg",tags=""):
 	if not created: created = timezone.now()
-	return Title.objects.create(title_name=title_name,
+	title = Title.objects.create(title_name=title_name,
 		created=created,poster=poster)
+	[title.tags.add(tag) for tag in tags]
+	return title
 
 def create_episode(title=None, number=1):
 		if title==None:
@@ -56,7 +58,12 @@ class DetailTitleTests(TestCase):
 		name = "JoJo"
 		response = self.client.get(reverse('anime_titles:detail', args=(create_title(name).id,)))
 		self.assertContains(response, "<title>"+name+"</title>")
-
+	
+	def test_can_create_title_with_tags(self):
+		tag_name = "Horror"
+		response = self.client.get(reverse('anime_titles:detail', args=(create_title(tags=(tag_name,)).id,)))
+		self.assertContains(response, tag_name)
+		
 	def test_can_create_title_with_multiple_episodes(self):
 		title = create_title()
 		episode1 = create_episode(title=title, number=1)
