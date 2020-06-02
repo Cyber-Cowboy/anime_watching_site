@@ -1,7 +1,6 @@
 {% extends "anime_titles/base.html" %}
 {% block title %}Новинки{% endblock %}
 {% block content %}
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 {%if anime_titles %}
 {%for anime in anime_titles%}
 <a href="{% url 'anime_titles:detail' anime.id %}"><div>

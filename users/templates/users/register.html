@@ -1,7 +1,6 @@
 {% extends "anime_titles/base.html" %}
 {% block title %}Регистрация{% endblock %}
 {% block content %}
-{% for error in error_messages %}<p><strong>{{ error }}</strong></p>{% endfor %}
 <form action="{% url 'users:register' %}" method="post">
 	{{ form.as_p }}
 	{% csrf_token %}

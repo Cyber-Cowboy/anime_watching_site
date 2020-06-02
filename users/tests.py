@@ -30,14 +30,14 @@ class UserAuthTest(TestCase):
 		user = register_user(username=username, password=password)
 		self.client.login(username=username, password=password)
 		response = self.client.get(reverse("users:login"))
-		self.assertTrue("error_messages" in response.context)
+		self.assertTrue("error" in str(response.content))
 	
 	def test_login(self):
 		"""Login user using view then check if login page show error message"""
 		username="Jhon"
 		password="password"
 		user = register_user(username=username, password=password)
-		response = self.client.post(reverse("users:login"), {"nickname":username,
+		response = self.client.post(reverse("users:login"), {"username":username,
 												"password":password})
 		response2 = self.client.get(reverse("users:login"))
-		self.assertTrue("error_messages" in response2.context)
+		self.assertTrue("error" in str(response2.content))
