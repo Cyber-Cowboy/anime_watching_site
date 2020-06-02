@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>register</title>
-</head>
-<body>
-{%if error_message%}<p class="error_message"><strong>{{error_message}}</strong></p>{%endif%}
+{% extends "anime_titles/base.html" %}
+{% block title %}Регистрация{% endblock %}
+{% block content %}
+{% for error in error_messages %}<p><strong>{{ error }}</strong></p>{% endfor %}
 <form action="{% url 'users:register' %}" method="post">
-	{%csrf_token%}
-	<input type="text" name="nickname">
-	<input type="password" name="password">
-	<input type="submit">
+	{{ form.as_p }}
+	{% csrf_token %}
+	<p><input type="submit" value="Создать"></p>
 </form>
-</body>
-</html>
+{% endblock %}

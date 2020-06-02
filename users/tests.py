@@ -12,25 +12,25 @@ class UserAuthTest(TestCase):
 
 	def test_registration(self):
 		nickname = "Jhon"
-		response = self.client.post(reverse("users:register"), {"nickname":nickname, "password":"password"})
+		response = self.client.post(reverse("users:register"), {"username":nickname, "password":"password", "password2":"password"})
 		user = User.objects.get(username=nickname)
-		self.assertEqual(nickname, nickname)
+		self.assertEqual(nickname, user.username)
 
 	def test_return_errormessage_if_username_taken(self):
 		nickname = "Jhon"
-		response1 = self.client.post(reverse("users:register"), {"nickname":nickname, "password":"password"})
-		response2 = self.client.post(reverse("users:register"), {"nickname":nickname, "password":"password"})
+		response1 = self.client.post(reverse("users:register"), {"username":nickname, "password":"password", "password2":"password"})
+		response2 = self.client.post(reverse("users:register"), {"username":nickname, "password":"password", "password2":"password"})
 		self.assertEqual(response2.status_code, 200) #It's not a redirect or error page
-		self.assertTrue("error_message" in response2.context) 
+		self.assertTrue("errorlist" in str(response2.content)) 
 	
 	def test_return_error_if_logged_user_try_to_login(self):
 		"""Login user using django then check if login page show error message"""
-		username="Jhon"
-		password="password"
+		username = "Jhon"
+		password = "password"
 		user = register_user(username=username, password=password)
 		self.client.login(username=username, password=password)
 		response = self.client.get(reverse("users:login"))
-		self.assertTrue("error_message" in response.context)
+		self.assertTrue("error_messages" in response.context)
 	
 	def test_login(self):
 		"""Login user using view then check if login page show error message"""
@@ -40,4 +40,4 @@ class UserAuthTest(TestCase):
 		response = self.client.post(reverse("users:login"), {"nickname":username,
 												"password":password})
 		response2 = self.client.get(reverse("users:login"))
-		self.assertTrue("error_message" in response2.context)
+		self.assertTrue("error_messages" in response2.context)
