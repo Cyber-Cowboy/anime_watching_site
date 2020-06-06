@@ -7,11 +7,13 @@
 </head>
 <body>
 	<div class="header">
+		<p><a href="{% url 'anime_titles:index' %}">Главная</a>
 		{% if request.user.is_authenticated %}
-			<p>{{ request.user.username }} | <a href="{% url 'users:logout' %}">Выйти</a></p>
+			{{ request.user.username }} | <a href="{% url 'users:logout' %}">Выйти</a>
 		{% else %}
-			<p><a href="{% url 'users:login' %}">Войти</a> | <a href="{% url 'users:register' %}">Регистрация</a></p>
+			<a href="{% url 'users:login' %}">Войти</a> | <a href="{% url 'users:register' %}">Регистрация</a>
 		{% endif %}
+		</p>
 	</div>
 	{% for message in messages %}<p class="{{ message.tags }}"><strong>{{ message }}</strong></p>{% endfor %}
 <div id="content">
