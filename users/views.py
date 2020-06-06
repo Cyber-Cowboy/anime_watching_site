@@ -40,8 +40,8 @@ def login_view(request):
 				login(request, user)
 				return HttpResponseRedirect(reverse("anime_titles:index"))
 			else:
-				errors.append("invalid login")
-				return render(request, template, {"form":form,"error_messages":errors})
+				messages.error(request,"Неверное имя или пароль")
+				return render(request, template, {"form":form})
 	else:
 		form = LoginForm()
 	return render(request, template, {"form":form})

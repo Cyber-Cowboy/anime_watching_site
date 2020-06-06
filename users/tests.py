@@ -34,10 +34,17 @@ class UserAuthTest(TestCase):
 	
 	def test_login(self):
 		"""Login user using view then check if login page show error message"""
-		username="Jhon"
-		password="password"
+		username = "Jhon"
+		password = "password"
 		user = register_user(username=username, password=password)
 		response = self.client.post(reverse("users:login"), {"username":username,
 												"password":password})
 		response2 = self.client.get(reverse("users:login"))
 		self.assertTrue("error" in str(response2.content))
+
+	def test_user_cannot_login_with_wrong_password(self):
+		username = "Jhon"
+		user = register_user(username=username, password="123")
+		response = self.client.post(reverse("users:login"), {"username":username,
+											"password":"321"})
+		self.assertTrue("error" in str(response.content))
