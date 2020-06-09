@@ -149,9 +149,8 @@ class IndexTitlesPageTests(TestCase):
 
 class TitleInListTest(TestCase):
 	def test_user_can_add_title_to_list(self):
-		title_name = "JoJo"
 		password = "password"
-		title = create_title(title_name=title_name)
+		title = create_title()
 		user = register_user(password=password)
 		AnimeList(user=user).save()
 		self.client.login(username=user.username, password=password)
@@ -161,9 +160,8 @@ class TitleInListTest(TestCase):
 		self.assertTrue(TitleInList.objects.filter(anime_list=user.animelist, title=title))
 
 	def test_user_cant_add_same_title_twice(self):
-		title_name = "JoJo"
 		password = "password"
-		title = create_title(title_name=title_name)
+		title = create_title()
 		user = register_user(password=password)
 		AnimeList(user=user).save()
 		self.client.login(username=user.username, password=password)
@@ -173,13 +171,11 @@ class TitleInListTest(TestCase):
 		self.client.post(reverse("anime_titles:add_title_to_list"),{"status":"PL",
 															"episode_count":0,
 															"title":title.id})
-		query = TitleInList.objects.all()
-		self.assertEqual(query.first(), query.last()) 
+		self.assertEqual(TitleInList.objects.all().count(), 1) 
 
 	def test_user_can_change_status_and_episode_count_of_title(self):
-		title_name = "JoJo"
 		password = "password"
-		title = create_title(title_name=title_name)
+		title = create_title()
 		user = register_user(password=password)
 		AnimeList(user=user).save()
 		self.client.login(username=user.username, password=password)
