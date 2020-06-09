@@ -7,4 +7,5 @@ urlpatterns = [
 	path('', views.LatestView.as_view(), name="index"),
 	path('latest/', views.LatestView.as_view(), name="latest"),
 	path('<int:pk>/detail/', views.TitleView.as_view(), name="detail"),
+	path('add_title/', views.add_title_to_list, name="add_title_to_list")
 ]

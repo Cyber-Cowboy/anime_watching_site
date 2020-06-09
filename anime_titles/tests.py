@@ -4,7 +4,8 @@ from django.urls import reverse
 
 import datetime
 
-from .models import Title, Episode, Translation
+from .models import Title, Episode, Translation, AnimeList, TitleInList
+from users.tests import register_user
 
 def create_title(title_name="JoJo", created=None, poster="image.com/image.jpg",tags=""):
 	if not created: created = timezone.now()
@@ -88,3 +89,49 @@ class IndexTitlesPageTests(TestCase):
 		indexResponse = self.client.get(reverse('anime_titles:index'))
 		latestResponse = self.client.get(reverse('anime_titles:latest'))
 		self.assertEqual(indexResponse.content, latestResponse.content)
+
+class TitleInListTest(TestCase):
+	def test_user_can_add_title_to_list(self):
+		title_name = "JoJo"
+		password = "password"
+		title = create_title(title_name=title_name)
+		user = register_user(password=password)
+		AnimeList(user=user).save()
+		self.client.login(username=user.username, password=password)
+		self.client.post(reverse("anime_titles:add_title_to_list"),{"status":"PL",
+															"episode_count":0,
+															"title":title.id})
+		self.assertTrue(TitleInList.objects.filter(anime_list=user.animelist, title=title))
+
+	def test_user_cant_add_same_title_twice(self):
+		title_name = "JoJo"
+		password = "password"
+		title = create_title(title_name=title_name)
+		user = register_user(password=password)
+		AnimeList(user=user).save()
+		self.client.login(username=user.username, password=password)
+		self.client.post(reverse("anime_titles:add_title_to_list"),{"status":"PL",
+															"episode_count":0,
+															"title":title.id})
+		self.client.post(reverse("anime_titles:add_title_to_list"),{"status":"PL",
+															"episode_count":0,
+															"title":title.id})
+		query = TitleInList.objects.all()
+		self.assertEqual(query.first(), query.last()) 
+
+	def test_user_can_change_status_and_episode_count_of_title(self):
+		title_name = "JoJo"
+		password = "password"
+		title = create_title(title_name=title_name)
+		user = register_user(password=password)
+		AnimeList(user=user).save()
+		self.client.login(username=user.username, password=password)
+		self.client.post(reverse("anime_titles:add_title_to_list"),{"status":"PL",
+															"episode_count":0,
+															"title":title.id})
+		self.client.post(reverse("anime_titles:add_title_to_list"),{"status":"WG",
+															"episode_count":2,
+															"title":title.id})
+		title_in_list = TitleInList.objects.filter(anime_list=user.animelist, title=title).first()
+		self.assertEqual(title_in_list.status,"WG")
+		self.assertEqual(title_in_list.episode_count,2)

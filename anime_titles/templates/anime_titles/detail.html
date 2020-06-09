@@ -4,6 +4,22 @@
 <h1>{{title.title_name}}</h1>
 <h3>{%for tag in title.tags.all%}<a href="#">{{tag}}</a>, {%endfor%}</h3>
 <img src="{{title.poster}}">
+<form action="{% url 'anime_titles:add_title_to_list' %}" method="POST">
+	{% csrf_token %}
+	<p>
+<label for="id_status">Status:</label> <select name="status" id="id_status">
+  <option value="WG">смотрю</option>
+
+  <option value="WD">просмотренно</option>
+
+  <option value="PL" selected>запланировано</option>
+
+  <option value="DP">брошено</option>
+</select></p>
+	<p><label for="id_episode_count">Просмотренно эпизодов:</label> <input type="number" name="episode_count" value="0" required id="id_episode_count"></p>
+	<input type="hidden" name="title" value="{{title.id}}" >
+	<input type="submit" value="Добавить в список">	
+</form>
 <br>
 {% for episode in title.episode_set.all %}
 <h2>{{episode.number}}</h2>
