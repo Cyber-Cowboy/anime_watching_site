@@ -6,8 +6,15 @@ class Title(models.Model):
 	title_name = models.CharField(max_length=200)
 	created = models.DateTimeField("First episode")
 	poster = models.CharField(max_length=500)
+	rating = models.IntegerField(default=0)
 	tags = TaggableManager()
 	
+	def count_rating(self):
+		rates = TitleInList.objects.filter(title=self,rated=True)
+		self.rating = sum([title.rating for title in rates])/rates.count()
+		self.save()
+		return self.rating
+
 	def __str__(self):
 		return self.title_name
 
@@ -43,3 +50,5 @@ class TitleInList(models.Model):
 	("PL","запланировано"),
 	("DP","брошено")]
 	status = models.CharField(max_length=2, choices=status_choices, default="PL")
+	rated = models.BooleanField(default=False)
+	rating = models.IntegerField(default=0)

@@ -81,6 +81,63 @@ class DetailTitleTests(TestCase):
 		self.assertContains(response, trans1.author)
 		self.assertContains(response, trans2.author)
 
+	def test_can_rate_title(self):
+		password = "password"
+		title = create_title()
+		user = register_user(password=password)
+		AnimeList(user=user).save()
+		self.client.login(username=user.username, password=password)
+		self.client.post(reverse("anime_titles:add_title_to_list"),{"status":"PL",
+															"episode_count":0,
+															"title":title.id})
+		response = self.client.post(reverse("anime_titles:rate_title"),{"rating":10,
+																		"title":title.id})
+		title = Title.objects.get(pk=title.id)
+		self.assertEqual(title.rating, 10)
+
+	def test_rating_of_anime_is_average_of_users_rated_it(self):
+		password = "password"
+		title = create_title()
+		user = register_user(password=password,username="1")
+		AnimeList(user=user).save()
+		self.client.login(username=user.username, password=password)
+		self.client.post(reverse("anime_titles:add_title_to_list"),{"status":"PL",
+															"episode_count":0,
+															"title":title.id})
+		response = self.client.post(reverse("anime_titles:rate_title"),{"rating":10,
+																		"title":title.id})		
+		user2 = register_user(password=password,username="2")
+		AnimeList(user=user2).save()
+		self.client.login(username=user2.username, password=password)
+		self.client.post(reverse("anime_titles:add_title_to_list"),{"status":"PL",
+															"episode_count":0,
+															"title":title.id})
+		response = self.client.post(reverse("anime_titles:rate_title"),{"rating":5,
+																		"title":title.id})
+		user3 = register_user(password=password,username="3")
+		AnimeList(user=user3).save()
+		self.client.login(username=user3.username, password=password)
+		self.client.post(reverse("anime_titles:add_title_to_list"),{"status":"PL",
+															"episode_count":0,
+															"title":title.id})
+		response = self.client.post(reverse("anime_titles:rate_title"),{"rating":6,
+																		"title":title.id})
+		self.assertEqual(Title.objects.get(pk=title.id).rating, (10+6+5)/3)
+
+	def test_cant_rate_more_than_10(self):
+		password = "password"
+		title = create_title()
+		user = register_user(password=password)
+		AnimeList(user=user).save()
+		self.client.login(username=user.username, password=password)
+		self.client.post(reverse("anime_titles:add_title_to_list"),{"status":"PL",
+															"episode_count":0,
+															"title":title.id})
+		response = self.client.post(reverse("anime_titles:rate_title"),{"rating":11,
+																		"title":title.id})
+		title = Title.objects.get(pk=title.id)
+		self.assertEqual(title.rating,0)
+
 class IndexTitlesPageTests(TestCase):
 	def test_index_redirects_control_to_latest(self):
 		"""

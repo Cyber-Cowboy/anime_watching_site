@@ -4,6 +4,13 @@
 <h1>{{title.title_name}}</h1>
 <h3>{%for tag in title.tags.all%}<a href="#">{{tag}}</a>, {%endfor%}</h3>
 <img src="{{title.poster}}">
+<p>{{title.rating}}</p>
+<form method="POST" action="{% url 'anime_titles:rate_title' %}">
+	{% csrf_token %}
+	{{rating_form.as_p}}
+	<input type="hidden" name="title" value="{{title.id}}">
+	<input type="submit" value="Оценить">
+</form>
 <form action="{% url 'anime_titles:add_title_to_list' %}" method="POST">
 	{% csrf_token %}
 	<p>
