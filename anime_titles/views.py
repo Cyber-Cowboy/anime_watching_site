@@ -31,6 +31,8 @@ def add_title_to_list(request):
 		old_title.status = status
 		old_title.episode_count = episode_count
 		old_title.save()
+		messages.success(request,"сохранено")
 	else:
 		TitleInList(anime_list=anime_list, title=title, status=status, episode_count=episode_count).save()
+		messages.success(request,"добавлено")
 	return HttpResponseRedirect(reverse("anime_titles:detail",kwargs={"pk":title.id}))
