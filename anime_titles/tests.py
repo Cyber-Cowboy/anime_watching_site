@@ -54,6 +54,17 @@ class LatestTitlesTests(TestCase):
 		a2 = [i for i in response.context["anime_titles"]]
 		self.assertEqual(a1, a2)
 
+	def test_pagination(self):
+		N = 5 #titles on front page
+		a1 = [create_title(str(i), created=(timezone.now()-datetime.timedelta(days=i))) for i in range(0,N*2)]
+		response = self.client.get(reverse('anime_titles:latest'), {"page":2})
+		a2 = [i for i in response.context["anime_titles"]]
+		self.assertEqual(a1[N:N*2], a2)
+
+	def test_page_out_of_range(self):
+		response = self.client.get(reverse('anime_titles:latest'), {"page":2})
+		self.assertEqual(response.status_code,404)
+
 class DetailTitleTests(TestCase):
 	def test_can_create_title_and_open_it_later(self):
 		name = "JoJo"

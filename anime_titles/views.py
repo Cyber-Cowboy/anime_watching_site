@@ -11,9 +11,8 @@ from .forms import RatingForm
 class LatestView(generic.ListView):
 	template_name = "anime_titles/latest_anime.html"
 	context_object_name = "anime_titles"
-
-	def get_queryset(self):
-		return Title.objects.order_by('-created')[:5]
+	queryset = Title.objects.order_by('-created')
+	paginate_by = 5
 
 class TitleView(generic.DetailView):
 	template_name = "anime_titles/detail.html"
