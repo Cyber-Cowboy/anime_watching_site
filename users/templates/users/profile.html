@@ -1,0 +1,15 @@
+{% extends "anime_titles/base.html" %}
+{% block title %}профиль {{profile.user.username}}'а{% endblock %}
+{% block content %}
+<h1>{{profile.user.username}}</h1>
+<img src="{{profile.avatar}}" width="150" height="200">
+<div>
+<table>
+{% for title in titles%}
+<tr><td>{{title.title.title_name}}:</td> <td>{{title.rating}}</td></tr>
+{% empty %}
+<p>пустовато...</p>
+</table>
+</div>
+{% endfor %}
+{% endblock %}

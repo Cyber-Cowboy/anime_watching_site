@@ -9,7 +9,7 @@
 	<div class="header">
 		<p><a href="{% url 'anime_titles:index' %}">Главная</a>
 		{% if request.user.is_authenticated %}
-			{{ request.user.username }} | <a href="{% url 'users:logout' %}">Выйти</a>
+			<a href="{% url 'users:profile' user.profile.id %}">{{ request.user.username }}</a> | <a href="{% url 'users:logout' %}">Выйти</a>
 		{% else %}
 			<a href="{% url 'users:login' %}">Войти</a> | <a href="{% url 'users:register' %}">Регистрация</a>
 		{% endif %}
