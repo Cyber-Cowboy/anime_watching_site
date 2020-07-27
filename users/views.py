@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -31,6 +31,7 @@ def register_view(request):
 
 def login_view(request):
 	template = "users/login.html"
+	next = request.POST.get('next')
 	form = LoginForm()
 	if request.user.is_authenticated:
 		messages.error(request,"Вы уже зашли под именем "+request.user.username)
@@ -43,7 +44,8 @@ def login_view(request):
 								password=cd['password'])
 			if user is not None:
 				login(request, user)
-				return HttpResponseRedirect(reverse("anime_titles:index"))
+				if next:return redirect(next)
+				else: return redirect(reverse("anime_titles:index"))
 			else:
 				messages.error(request,"Неверное имя или пароль")
 				return render(request, template, {"form":form})
