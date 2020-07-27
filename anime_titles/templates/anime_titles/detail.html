@@ -7,7 +7,7 @@
 <p>{{title.rating}}</p>
 <form method="POST" action="{% url 'anime_titles:rate_title' %}">
 	{% csrf_token %}
-	{{rating_form.as_p}}
+	<p><label for="id_rating">Оценить:</label> <input type="number" name="rating" min="1" max="10" required id="id_rating"></p>
 	<input type="hidden" name="title" value="{{title.id}}">
 	<input type="submit" value="Оценить">
 </form>

@@ -22,29 +22,14 @@ class UserAuthTest(TestCase):
 		response2 = self.client.post(reverse("users:register"), {"username":nickname, "password":"password", "password2":"password"})
 		self.assertEqual(response2.status_code, 200) #It's not a redirect or error page
 		self.assertTrue("errorlist" in str(response2.content)) 
-	
-	def test_return_error_if_logged_user_try_to_login(self):
-		"""Login user using django then check if login page show error message"""
-		username = "Jhon"
-		password = "password"
-		user = register_user(username=username, password=password)
-		self.client.login(username=username, password=password)
-		response = self.client.get(reverse("users:login"))
-		self.assertTrue("error" in str(response.content))
-	
-	def test_login(self):
-		"""Login user using view then check if login page show error message"""
-		username = "Jhon"
-		password = "password"
-		user = register_user(username=username, password=password)
-		response = self.client.post(reverse("users:login"), {"username":username,
-												"password":password})
-		response2 = self.client.get(reverse("users:login"))
-		self.assertTrue("error" in str(response2.content))
-
+		
 	def test_user_cannot_login_with_wrong_password(self):
 		username = "Jhon"
 		user = register_user(username=username, password="123")
 		response = self.client.post(reverse("users:login"), {"username":username,
 											"password":"321"})
 		self.assertTrue("error" in str(response.content))
+
+	def test_user_cant_rate_anime_without_auth(self):
+		response2 = self.client.post(reverse("anime_titles:rate_title"), {})
+		self.assertEqual(response2.status_code,302)
