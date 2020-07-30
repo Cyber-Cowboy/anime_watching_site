@@ -2,17 +2,31 @@ from django.shortcuts import render
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib import messages
 from .models import Title, TitleInList 
 from .forms import RatingForm
+import json
 
 class LatestView(generic.ListView):
 	template_name = "anime_titles/latest_anime.html"
 	context_object_name = "anime_titles"
 	queryset = Title.objects.order_by('-created')
-	paginate_by = 5
+	paginate_by = 10
+
+def popular_titles_page(request):
+	return render(request,"anime_titles/popular.html", {})
+
+def popular_titles_load(request):
+	title_per_page = 20
+	current_page = int(request.GET["current_page"])
+	queryset = Title.objects.order_by('rating')[current_page*title_per_page:(current_page+1)*title_per_page]
+	titles = [{
+	"name":title.title_name,
+	"url":title.get_absolute_url(),
+	"poster":title.poster} for title in queryset]
+	return HttpResponse(json.dumps(titles))
 
 class TitleView(generic.DetailView):
 	template_name = "anime_titles/detail.html"

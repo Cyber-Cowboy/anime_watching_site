@@ -1,0 +1,37 @@
+{% extends "anime_titles/base.html" %}
+{% block title %}Новинки{% endblock %}
+{% block content %}
+<div id="app">
+  <div class="list">
+    <div class="title" v-for="title in titles">
+      <a v-bind:href="title.url">
+	       <p>[[title.name]]</p>
+	       <img v-bind:src="title.poster" class="poster">
+      </a>
+    </div>
+  </div>
+  <button class="button" v-on:click="loadTitles">Смотреть дальше</button>
+</div>
+
+<script type="text/javascript">
+let app = new Vue({
+  el: '#app',
+  delimiters: ['[[', ']]'],
+  data: {
+    titles: [],
+    current_page:0,
+  },
+  methods:{
+  	loadTitles: function() {
+  		let xhttp = new XMLHttpRequest();
+  		xhttp.onreadystatechange = function() {
+  			if(this.readyState == 4 && this.status==200){
+  				for(i of JSON.parse(this.responseText)){app.titles.push(i)};
+          app.current_page+=1;}}
+  		xhttp.open("GET", `/get_popular/?current_page=${app.current_page}`, true);
+  		xhttp.send();}
+  }
+})
+app.loadTitles()
+</script>
+{%endblock%}

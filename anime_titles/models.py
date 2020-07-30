@@ -1,6 +1,7 @@
 from django.db import models
 from taggit.managers import TaggableManager
 from django.conf import settings
+from django.urls import reverse
 
 class Title(models.Model):
 	title_name = models.CharField(max_length=200)
@@ -14,7 +15,9 @@ class Title(models.Model):
 		self.rating = sum([title.rating for title in rates])/rates.count()
 		self.save()
 		return self.rating
-
+	def get_absolute_url(self):
+		return reverse("anime_titles:detail",
+			args=[self.id])
 	def __str__(self):
 		return self.title_name
 

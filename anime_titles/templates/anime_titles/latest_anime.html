@@ -1,15 +1,19 @@
 {% extends "anime_titles/base.html" %}
 {% block title %}Новинки{% endblock %}
 {% block content %}
+<div class="list">
 {%if anime_titles %}
 {%for anime in anime_titles%}
+<div class="title">
 <a href="{% url 'anime_titles:detail' anime.id %}"><div>
 	<p>{{anime.title_name}}</p>
-	<img src="{{anime.poster}}">
+	<img src="{{anime.poster}}" class="poster">
 </div></a>
+</div>
 {%endfor%}
 {%else%}
 <p>No anime yet</p>
 {%endif%}
+</div>
 {% include "pagination.html" with page=page_obj %}
 {%endblock%}
