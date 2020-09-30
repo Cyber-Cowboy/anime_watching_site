@@ -38,7 +38,7 @@ class LatestTitlesTests(TestCase):
 		"""
 		Tests that only five of six created titles are displayed
 		"""
-		N = 5 #titles on front page
+		N = 10 #titles on front page
 		a1 = [create_title(str(i)) for i in range(0,N+1)]
 		response = self.client.get(reverse('anime_titles:latest'))
 		a2 = [i for i in response.context["anime_titles"]]
@@ -55,7 +55,7 @@ class LatestTitlesTests(TestCase):
 		self.assertEqual(a1, a2)
 
 	def test_pagination(self):
-		N = 5 #titles on front page
+		N = 10 #titles on front page
 		a1 = [create_title(str(i), created=(timezone.now()-datetime.timedelta(days=i))) for i in range(0,N*2)]
 		response = self.client.get(reverse('anime_titles:latest'), {"page":2})
 		a2 = [i for i in response.context["anime_titles"]]
@@ -148,6 +148,20 @@ class DetailTitleTests(TestCase):
 																		"title":title.id})
 		title = Title.objects.get(pk=title.id)
 		self.assertEqual(title.rating,0)
+
+	def test_can_rate_titlee_and_see_this_rate_later(self):
+		password = "password"
+		title = create_title()
+		user = register_user(password=password)
+		AnimeList(user=user).save()
+		self.client.login(username=user.username, password=password)
+		self.client.post(reverse("anime_titles:add_title_to_list"),{"status":"PL",
+															"episode_count":0,
+															"title":title.id})
+		self.client.post(reverse("anime_titles:rate_title"),{"rating":9,
+																		"title":title.id})
+		response = self.client.get(reverse('anime_titles:detail', args=(title.id,)))
+		self.assertContains(response,"<p>Ваша оценка: 9</p>")
 
 class IndexTitlesPageTests(TestCase):
 	def test_index_redirects_control_to_latest(self):

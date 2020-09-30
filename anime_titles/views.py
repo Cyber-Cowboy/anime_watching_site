@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
@@ -27,7 +27,7 @@ def popular_titles_load(request):
 	"url":title.get_absolute_url(),
 	"poster":title.poster} for title in queryset]
 	return HttpResponse(json.dumps(titles))
-
+"""
 class TitleView(generic.DetailView):
 	template_name = "anime_titles/detail.html"
 	model = Title
@@ -35,7 +35,19 @@ class TitleView(generic.DetailView):
 		context = super().get_context_data(**kwargs)
 		context['rating_form'] = RatingForm()
 		return context
+"""
 
+def title_detail(request, pk):
+	template = "anime_titles/detail.html"
+	title = get_object_or_404(Title, pk=pk)
+	personal_rating = None
+	if request.user.is_authenticated:
+		rated = TitleInList.objects.get(anime_list=request.user.animelist, title=title)
+		if rated.rated:
+			personal_rating = rated.rating
+	context = {"title":title, "personal_rating":personal_rating,}
+	return render(request,template,context)
+	
 @login_required
 @require_http_methods(["POST"])
 def add_title_to_list(request):

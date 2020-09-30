@@ -5,6 +5,10 @@
 <h3>{%for tag in title.tags.all%}<a href="#">{{tag}}</a>, {%endfor%}</h3>
 <img src="{{title.poster}}">
 <p>Рейтинг: {{title.rating}}</p>
+{% if personal_rating %}
+	<p>Ваша оценка: {{personal_rating}}</p>
+{%endif%}
+<p></p>
 {% if request.user.is_authenticated %}
 <form method="POST" action="{% url 'anime_titles:rate_title' %}">
 	{% csrf_token %}

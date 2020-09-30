@@ -1,11 +1,13 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
+from .models import Profile
 
 def register_user(username="JoJo", password="password"):
 	user = User.objects.create_user(username=username,
 									password=password)
 	user.save()
+	Profile(user=user).save()
 	return user
 
 class UserAuthTest(TestCase):
